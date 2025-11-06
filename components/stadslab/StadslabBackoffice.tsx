@@ -304,12 +304,36 @@ function ConceptEditor({ concept, instance, onChange, colorIdx, isAdmin, updateI
 
   const normalizedWeights = useMemo(() => {
     const on = optionKeys.filter(k => enabledOptions[k]);
-    if (!on.length) return {};
-    const w = {}; on.forEach(k => (w[k] = Number((Number(optionWeights[k]) || 0).toFixed(2))));
-    const sum = Object.values(w).reduce((a, b) => a + b, 0);
-    const diff = Number((100 - sum).toFixed(2));
-    if (Math.abs(diff) > 0.01) { const fix = on[0]; w[fix] = Number(((w[fix] || 0) + diff).toFixed(2)); }
-    return w;
+// on: string[]   |  optionWeights: Record<string, number | string | undefined>
+
+if (!on.length) return {};
+
+// Zorg dat w een "kaart" is van string → number
+const w: Record<string, number> = {};
+
+// Vul w met nette getallen (max 2 decimalen)
+on.forEach((k: string) => {
+  const raw = Number(optionWeights[k] ?? 0);
+  w[k] = Number(raw.toFixed(2));
+});
+
+// Zeg expliciet: dit zijn nummers
+const values = Object.values(w) as number[];
+
+// Tel veilig op
+const sum = values.reduce((a: number, b: number) => a + b, 0);
+
+// Rond het verschil af op 2 decimalen
+const diff = Number((100 - sum).toFixed(2));
+
+// Als de totale som niet precies 100 is, corrigeer het eerste item
+if (Math.abs(diff) > 0.01) {
+  const fix = on[0] as string;
+  w[fix] = Number(((w[fix] ?? 0) + diff).toFixed(2));
+}
+
+return w;
+
   }, [optionKeys, enabledOptions, optionWeights]);
 
   const items = useMemo(() => {

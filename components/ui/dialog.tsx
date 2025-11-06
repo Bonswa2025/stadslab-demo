@@ -8,7 +8,6 @@ export interface DialogProps {
 }
 
 export function Dialog({ open = true, onOpenChange, children }: DialogProps) {
-  // Sluit het venster als buiten geklikt wordt
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -24,34 +23,16 @@ export function Dialog({ open = true, onOpenChange, children }: DialogProps) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-      <div
-        ref={ref}
-        className="w-full max-w-lg rounded-lg bg-white p-4 shadow-lg relative"
-      >
+      <div ref={ref} className="w-full max-w-lg rounded-lg bg-white p-4 shadow-lg">
         {children}
       </div>
     </div>
   );
 }
 
-export function DialogContent({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function DialogContent({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return <div className={`p-4 ${className}`}>{children}</div>;
 }
-
-export function DialogHeader({ children }: { children: React.ReactNode }) {
-  return <div className="mb-2">{children}</div>;
-}
-
-export function DialogTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-base font-semibold">{children}</h3>;
-}
-
-export function DialogFooter({ children }: { children: React.ReactNode }) {
-  return <div className="mt-3 flex justify-end gap-2">{children}</div>;
-}
+export function DialogHeader({ children }: { children: React.ReactNode }) { return <div className="mb-2">{children}</div>; }
+export function DialogTitle({ children }: { children: React.ReactNode }) { return <h3 className="text-base font-semibold">{children}</h3>; }
+export function DialogFooter({ children }: { children: React.ReactNode }) { return <div className="mt-3 flex justify-end gap-2">{children}</div>; }

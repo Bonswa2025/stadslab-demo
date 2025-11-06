@@ -4,7 +4,6 @@ import * as React from 'react';
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'checked'> {
   checked?: boolean;
-  /** shadcn-achtige prop */
   onCheckedChange?: (checked: boolean) => void;
   className?: string;
   [key: string]: any;
@@ -14,13 +13,14 @@ export function Checkbox({
   className = '',
   checked,
   onCheckedChange,
-  onChange,           // standaard React prop blijft ook werken
+  onChange,
   disabled,
   ...props
 }: CheckboxProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // roep beide aan, zodat elk type code werkt
     onCheckedChange?.(e.currentTarget.checked);
-    onChange?.(e); // roep originele onChange ook aan
+    onChange?.(e);
   };
 
   return (
